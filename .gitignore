@@ -1,0 +1,60 @@
+# Claude
+.claude/
+
+# Build output
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.rsuser
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# ASP.NET Core
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+
+# Secrets
+secrets.json
+*.pfx
+*.key
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Frontend libraries (restored via LibMan)
+**/wwwroot/lib/
+
+# Publish output
+publish/
+**/publish/
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+*.mdf
+*.ldf
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
