@@ -21,6 +21,11 @@ public class AdService : IAdService
         return await _apiClient.GetBySubscriptionNumberAsync(subscriptionNumber);
     }
 
+    public async Task<IEnumerable<Ad>> GetAllAdsAsync()
+    {
+        return await _adRepository.GetAllAsync();
+    }
+
     public async Task<Ad> CreateSubscriberAdAsync(string subscriptionNumber, string title, string content, decimal itemPrice)
     {
         // Re-fetch from API to keep snapshot fresh
