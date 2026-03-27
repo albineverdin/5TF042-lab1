@@ -20,7 +20,7 @@
 
 @* Subscriber form *@
 <div id="subscriberSection">
-    <form asp-action="CreateSubscriberAd" method="post">
+    <form asp-action="CreateSubscriberAd" method="post" onsubmit="return validateSubscriberForm()">
         @Html.AntiForgeryToken()
 
         <h4>Subscriber details</h4>
@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div id="subscriberDetails" style="display:none">
+        <div id="subscriberDetails" style="display:none" data-verified="false">
             <div class="row mb-3">
                 <div class="col-md-4">
                     <label class="form-label">Name</label>
@@ -211,11 +211,22 @@
             document.getElementById('subPostalCode').value = data.postalCode;
             document.getElementById('subCity').value = data.city;
 
+            detailsEl.dataset.verified = 'true';
             detailsEl.style.display = 'block';
         } catch {
             errorEl.style.display = 'block';
             detailsEl.style.display = 'none';
         }
+    }
+
+    function validateSubscriberForm() {
+        const detailsEl = document.getElementById('subscriberDetails');
+        if (detailsEl.dataset.verified !== 'true') {
+            document.getElementById('lookupError').textContent = 'You must fetch and verify your subscription number before placing an ad.';
+            document.getElementById('lookupError').style.display = 'block';
+            return false;
+        }
+        return true;
     }
 </script>
 }
