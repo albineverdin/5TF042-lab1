@@ -1,6 +1,3 @@
-# Claude
-.claude/
-
 # Build output
 bin/
 obj/
@@ -20,11 +17,10 @@ obj/
 
 # VS Code
 .vscode/
+.claude/
 
 # ASP.NET Core
-appsettings.Development.json
-appsettings.*.json
-!appsettings.json
+appsettings*.json
 
 # Secrets
 secrets.json
@@ -58,3 +54,9 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Info
+project-context.md
+laboration-1-specification.txt
+development-log.md
+SubscriberSystemAPI/Properties/launchSettings.json
