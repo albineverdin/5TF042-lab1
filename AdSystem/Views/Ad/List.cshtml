@@ -1,0 +1,46 @@
+@model IEnumerable<AdSystem.Models.Ad>
+
+@{
+    ViewData["Title"] = "All Ads";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>All Ads</h2>
+    <a asp-action="Create" class="btn btn-primary">Place new ad</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No ads have been placed yet.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var ad in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong>@ad.Title</strong>
+                        @if (ad.Advertiser.Type == "company")
+                        {
+                            <span class="badge bg-warning text-dark">Company</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Subscriber</span>
+                        }
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">@ad.Content</p>
+                        <ul class="list-unstyled mb-0">
+                            <li><strong>Advertiser:</strong> @ad.Advertiser.Name</li>
+                            <li><strong>Item price:</strong> @ad.ItemPrice.ToString("C", new System.Globalization.CultureInfo("sv-SE"))</li>
+                            <li><strong>Ad price:</strong> @ad.AdPrice.ToString("C", new System.Globalization.CultureInfo("sv-SE"))</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
