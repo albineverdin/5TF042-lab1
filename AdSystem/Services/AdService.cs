@@ -26,25 +26,39 @@ public class AdService : IAdService
         return await _adRepository.GetAllAsync();
     }
 
-    public async Task<Ad> CreateSubscriberAdAsync(string subscriptionNumber, string title, string content, decimal itemPrice)
+    public async Task<Ad> CreateSubscriberAdAsync(string subscriptionNumber, string name, string phone,
+        string address, string postalCode, string city,
+        string title, string content, decimal itemPrice)
     {
-        // Re-fetch from API to keep snapshot fresh
-        var subscriberData = await _apiClient.GetBySubscriptionNumberAsync(subscriptionNumber);
-        if (subscriberData == null)
+        // Validate that the subscription number exists in the API
+        var exists = await _apiClient.GetBySubscriptionNumberAsync(subscriptionNumber);
+        if (exists == null)
             throw new InvalidOperationException($"Subscriber '{subscriptionNumber}' not found in subscription system.");
 
-        // Find existing advertiser or create new
+        // Find existing advertiser or create new, using user-submitted values
         var advertiser = await _advertiserRepository.GetBySubscriptionNumberAsync(subscriptionNumber);
         if (advertiser == null)
         {
-            advertiser = new Advertiser { Type = "subscriber", SubscriptionNumber = subscriptionNumber };
-            ApplySubscriberSnapshot(advertiser, subscriberData);
+            advertiser = new Advertiser
+            {
+                Type = "subscriber",
+                SubscriptionNumber = subscriptionNumber,
+                Name = name,
+                Phone = phone,
+                Address = address,
+                PostalCode = postalCode,
+                City = city
+            };
             advertiser = await _advertiserRepository.CreateAsync(advertiser);
         }
         else
         {
-            // Update snapshot with latest data from API
-            ApplySubscriberSnapshot(advertiser, subscriberData);
+            // Update snapshot with user-submitted values (may include corrections)
+            advertiser.Name = name;
+            advertiser.Phone = phone;
+            advertiser.Address = address;
+            advertiser.PostalCode = postalCode;
+            advertiser.City = city;
             advertiser = await _advertiserRepository.UpdateAsync(advertiser);
         }
 
@@ -96,12 +110,4 @@ public class AdService : IAdService
         return await _adRepository.CreateAsync(ad);
     }
 
-    private static void ApplySubscriberSnapshot(Advertiser advertiser, SubscriberResponse data)
-    {
-        advertiser.Name = $"{data.FirstName} {data.LastName}";
-        advertiser.Phone = data.PhoneNumber;
-        advertiser.Address = data.Address;
-        advertiser.PostalCode = data.PostalCode;
-        advertiser.City = data.City;
-    }
 }

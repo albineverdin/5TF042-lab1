@@ -42,6 +42,11 @@ public class AdController : Controller
         {
             await _adService.CreateSubscriberAdAsync(
                 model.SubscriptionNumber,
+                model.Name,
+                model.Phone,
+                model.Address,
+                model.PostalCode,
+                model.City,
                 model.Title,
                 model.Content,
                 model.ItemPrice);
