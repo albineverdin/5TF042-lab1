@@ -1,0 +1,36 @@
+@base = http://localhost:5172
+
+### Get all subscribers
+GET {{base}}/api/subscribers
+Accept: application/json
+
+###
+
+### Get subscriber by subscription number
+GET {{base}}/api/subscribers/ABC123
+Accept: application/json
+
+###
+
+### Create subscriber
+POST {{base}}/api/subscribers
+Content-Type: application/json
+
+{
+  "subscriptionNumber": "ABC123",
+  "nationalIdNumber": "19900101-1234",
+  "firstName": "Anna",
+  "lastName": "Svensson",
+  "phoneNumber": "0701234567",
+  "address": "Storgatan 1",
+  "postalCode": "12345",
+  "city": "Stockholm"
+}
+
+###
+
+### Delete subscriber by id
+DELETE {{base}}/api/subscribers/1
+Accept: application/json
+
+###
