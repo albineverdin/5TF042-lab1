@@ -8,12 +8,15 @@ public class AdService : IAdService
     private readonly IAdvertiserRepository _advertiserRepository;
     private readonly IAdRepository _adRepository;
     private readonly SubscriberApiClient _apiClient;
+    private readonly CurrencyApiClient _currencyClient;
 
-    public AdService(IAdvertiserRepository advertiserRepository, IAdRepository adRepository, SubscriberApiClient apiClient)
+    public AdService(IAdvertiserRepository advertiserRepository, IAdRepository adRepository,
+        SubscriberApiClient apiClient, CurrencyApiClient currencyClient)
     {
         _advertiserRepository = advertiserRepository;
         _adRepository = adRepository;
         _apiClient = apiClient;
+        _currencyClient = currencyClient;
     }
 
     public async Task<SubscriberResponse?> LookupSubscriberAsync(string subscriptionNumber)
@@ -54,6 +57,11 @@ public class AdService : IAdService
     public async Task<int?> ImportSubscribersXmlAsync(string xml)
     {
         return await _apiClient.ImportXmlAsync(xml);
+    }
+
+    public async Task<ExchangeRates?> GetExchangeRatesAsync()
+    {
+        return await _currencyClient.GetRatesFromSekAsync();
     }
 
     public async Task<Ad> CreateSubscriberAdAsync(string subscriptionNumber, string name, string phone,

@@ -12,6 +12,7 @@ public interface IAdService
     Task<bool> DeleteSubscriberAsync(int id);
     Task<string?> ExportSubscribersXmlAsync();
     Task<int?> ImportSubscribersXmlAsync(string xml);
+    Task<ExchangeRates?> GetExchangeRatesAsync();
     Task<Ad> CreateSubscriberAdAsync(string subscriptionNumber, string name, string phone,
         string address, string postalCode, string city,
         string title, string content, decimal itemPrice);

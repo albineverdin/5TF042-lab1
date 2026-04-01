@@ -85,10 +85,29 @@ public class AdController : Controller
         return RedirectToAction(nameof(List));
     }
 
-    // GET /Ad/List — show all ads
-    public async Task<IActionResult> List()
+    // GET /Ad/List?currency=EUR — show all ads, prices in selected currency
+    public async Task<IActionResult> List(string currency = "SEK")
     {
         var ads = await _adService.GetAllAdsAsync();
+        var rates = await _adService.GetExchangeRatesAsync();
+
+        var availableCurrencies = new List<string> { "SEK" };
+        decimal selectedRate = 1m;
+
+        if (rates != null)
+        {
+            availableCurrencies.AddRange(rates.Rates.Keys);
+
+            if (currency != "SEK" && rates.Rates.TryGetValue(currency, out var rate))
+                selectedRate = rate;
+            else
+                currency = "SEK";
+        }
+
+        ViewBag.Currency = currency;
+        ViewBag.Rate = selectedRate;
+        ViewBag.AvailableCurrencies = availableCurrencies;
+
         return View(ads);
     }
 }

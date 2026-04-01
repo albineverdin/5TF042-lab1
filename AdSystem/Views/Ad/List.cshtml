@@ -2,12 +2,26 @@
 
 @{
     ViewData["Title"] = "All Ads";
+    string selectedCurrency = ViewBag.Currency ?? "SEK";
+    decimal rate = ViewBag.Rate ?? 1m;
+    var availableCurrencies = ViewBag.AvailableCurrencies as List<string> ?? new List<string> { "SEK" };
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>All Ads</h2>
     <a asp-action="Create" class="btn btn-primary">Place new ad</a>
 </div>
+
+<form method="get" class="mb-4 d-flex align-items-center gap-2">
+    <label class="form-label mb-0 fw-bold">Display prices in:</label>
+    <select name="currency" class="form-select form-select-sm" style="width:auto">
+        @foreach (var c in availableCurrencies)
+        {
+            <option value="@c" selected="@(c == selectedCurrency ? "selected" : null)">@c</option>
+        }
+    </select>
+    <button type="submit" class="btn btn-sm btn-outline-secondary">Apply</button>
+</form>
 
 @if (!Model.Any())
 {
@@ -35,8 +49,8 @@ else
                         <p class="card-text">@ad.Content</p>
                         <ul class="list-unstyled mb-0">
                             <li><strong>Advertiser:</strong> @ad.Advertiser.Name</li>
-                            <li><strong>Item price:</strong> @ad.ItemPrice.ToString("C", new System.Globalization.CultureInfo("sv-SE"))</li>
-                            <li><strong>Ad price:</strong> @ad.AdPrice.ToString("C", new System.Globalization.CultureInfo("sv-SE"))</li>
+                            <li><strong>Item price:</strong> @((ad.ItemPrice * rate).ToString("F2")) @selectedCurrency</li>
+                            <li><strong>Ad price:</strong> @((ad.AdPrice * rate).ToString("F2")) @selectedCurrency</li>
                         </ul>
                     </div>
                 </div>

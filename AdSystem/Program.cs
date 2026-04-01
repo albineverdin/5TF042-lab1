@@ -15,6 +15,11 @@ builder.Services.AddHttpClient<SubscriberApiClient>(client =>
     client.BaseAddress = new Uri(builder.Configuration["SubscriberApi:BaseUrl"]!);
 });
 
+builder.Services.AddHttpClient<CurrencyApiClient>(client =>
+{
+    client.BaseAddress = new Uri("https://api.frankfurter.app/");
+});
+
 builder.Services.AddScoped<IAdvertiserRepository, AdvertiserRepository>();
 builder.Services.AddScoped<IAdRepository, AdRepository>();
 builder.Services.AddScoped<IAdService, AdService>();
