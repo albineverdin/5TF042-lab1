@@ -6,6 +6,10 @@ public interface IAdService
 {
     Task<SubscriberResponse?> LookupSubscriberAsync(string subscriptionNumber);
     Task<IEnumerable<Ad>> GetAllAdsAsync();
+    Task<bool> DeleteAdAsync(int id);
+    Task<IEnumerable<SubscriberRecord>> GetAllSubscribersAsync();
+    Task<SubscriberRecord?> CreateSubscriberAsync(SubscriberRecord subscriber);
+    Task<bool> DeleteSubscriberAsync(int id);
     Task<Ad> CreateSubscriberAdAsync(string subscriptionNumber, string name, string phone,
         string address, string postalCode, string city,
         string title, string content, decimal itemPrice);

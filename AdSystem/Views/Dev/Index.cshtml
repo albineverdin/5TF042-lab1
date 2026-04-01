@@ -1,0 +1,116 @@
+@using AdSystem.Models
+@{
+    ViewData["Title"] = "Dev Tools";
+    var subscribers = (IEnumerable<SubscriberRecord>)ViewBag.Subscribers;
+    var ads = (IEnumerable<Ad>)ViewBag.Ads;
+}
+
+<h2>Dev Tools</h2>
+<p class="text-muted">Development-only page for seeding and inspecting data.</p>
+
+@* ── Subscribers ── *@
+<h4 class="mt-4">Subscribers (via API)</h4>
+@if (!subscribers.Any())
+{
+    <p class="text-muted">No subscribers found.</p>
+}
+else
+{
+    <table class="table table-sm table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th><th>Sub #</th><th>Name</th><th>Phone</th><th>Address</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in subscribers)
+            {
+                <tr>
+                    <td>@s.Id</td>
+                    <td>@s.SubscriptionNumber</td>
+                    <td>@s.FirstName @s.LastName</td>
+                    <td>@s.PhoneNumber</td>
+                    <td>@s.Address, @s.PostalCode @s.City</td>
+                    <td>
+                        <form asp-action="DeleteSubscriber" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@s.Id">
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Delete subscriber @s.SubscriptionNumber?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@* ── Create subscriber ── *@
+<h5 class="mt-3">Add test subscriber</h5>
+<form asp-action="CreateSubscriber" method="post" class="row g-2 mb-5">
+    @Html.AntiForgeryToken()
+    <div class="col-md-2">
+        <input type="text" name="SubscriptionNumber" class="form-control form-control-sm" placeholder="Sub number" required>
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="NationalIdNumber" class="form-control form-control-sm" placeholder="National ID" required>
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="FirstName" class="form-control form-control-sm" placeholder="First name" required>
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="LastName" class="form-control form-control-sm" placeholder="Last name" required>
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="PhoneNumber" class="form-control form-control-sm" placeholder="Phone" required>
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="Address" class="form-control form-control-sm" placeholder="Address" required>
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="PostalCode" class="form-control form-control-sm" placeholder="Postal code" required>
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="City" class="form-control form-control-sm" placeholder="City" required>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-sm btn-success">Add</button>
+    </div>
+</form>
+
+@* ── Ads ── *@
+<h4 class="mt-2">Ads (AdSystem DB)</h4>
+@if (!ads.Any())
+{
+    <p class="text-muted">No ads found.</p>
+}
+else
+{
+    <table class="table table-sm table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th><th>Title</th><th>Advertiser</th><th>Item price</th><th>Ad price</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in ads)
+            {
+                <tr>
+                    <td>@a.Id</td>
+                    <td>@a.Title</td>
+                    <td>@a.Advertiser?.Name</td>
+                    <td>@a.ItemPrice.ToString("C", new System.Globalization.CultureInfo("sv-SE"))</td>
+                    <td>@a.AdPrice.ToString("C", new System.Globalization.CultureInfo("sv-SE"))</td>
+                    <td>
+                        <form asp-action="DeleteAd" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@a.Id">
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Delete ad #@a.Id?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -21,4 +21,31 @@ public class SubscriberApiClient
 
         return await response.Content.ReadFromJsonAsync<SubscriberResponse>();
     }
+
+    public async Task<IEnumerable<SubscriberRecord>> GetAllAsync()
+    {
+        var response = await _httpClient.GetAsync("api/subscribers");
+
+        if (!response.IsSuccessStatusCode)
+            return Enumerable.Empty<SubscriberRecord>();
+
+        return await response.Content.ReadFromJsonAsync<IEnumerable<SubscriberRecord>>()
+               ?? Enumerable.Empty<SubscriberRecord>();
+    }
+
+    public async Task<SubscriberRecord?> CreateAsync(SubscriberRecord subscriber)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/subscribers", subscriber);
+
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        return await response.Content.ReadFromJsonAsync<SubscriberRecord>();
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var response = await _httpClient.DeleteAsync($"api/subscribers/{id}");
+        return response.IsSuccessStatusCode;
+    }
 }

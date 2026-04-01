@@ -26,4 +26,13 @@ public class AdRepository : IAdRepository
         await _context.SaveChangesAsync();
         return ad;
     }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var ad = await _context.Ads.FindAsync(id);
+        if (ad == null) return false;
+        _context.Ads.Remove(ad);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

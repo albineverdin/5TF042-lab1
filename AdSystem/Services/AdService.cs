@@ -26,6 +26,26 @@ public class AdService : IAdService
         return await _adRepository.GetAllAsync();
     }
 
+    public async Task<bool> DeleteAdAsync(int id)
+    {
+        return await _adRepository.DeleteAsync(id);
+    }
+
+    public async Task<IEnumerable<SubscriberRecord>> GetAllSubscribersAsync()
+    {
+        return await _apiClient.GetAllAsync();
+    }
+
+    public async Task<SubscriberRecord?> CreateSubscriberAsync(SubscriberRecord subscriber)
+    {
+        return await _apiClient.CreateAsync(subscriber);
+    }
+
+    public async Task<bool> DeleteSubscriberAsync(int id)
+    {
+        return await _apiClient.DeleteAsync(id);
+    }
+
     public async Task<Ad> CreateSubscriberAdAsync(string subscriptionNumber, string name, string phone,
         string address, string postalCode, string city,
         string title, string content, decimal itemPrice)
