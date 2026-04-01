@@ -8,4 +8,6 @@ public interface ISubscriberService
     Task<SubscriberDto?> GetBySubscriptionNumberAsync(string subscriptionNumber);
     Task<Subscriber> CreateAsync(Subscriber subscriber);
     Task<bool> DeleteAsync(int id);
+    Task<string> ExportToXmlAsync();
+    Task<int> ImportFromXmlAsync(string xml);
 }

@@ -23,6 +23,35 @@ public class SubscribersController : ControllerBase
         return Ok(subscribers);
     }
 
+    // GET /api/subscribers/export — returns all subscribers as XML
+    [HttpGet("export")]
+    public async Task<IActionResult> Export()
+    {
+        var xml = await _service.ExportToXmlAsync();
+        return Content(xml, "application/xml");
+    }
+
+    // POST /api/subscribers/import — imports subscribers from XML body, skips duplicates
+    [HttpPost("import")]
+    public async Task<IActionResult> Import()
+    {
+        using var reader = new StreamReader(Request.Body);
+        var xml = await reader.ReadToEndAsync();
+
+        if (string.IsNullOrWhiteSpace(xml))
+            return BadRequest("Request body is empty.");
+
+        try
+        {
+            var inserted = await _service.ImportFromXmlAsync(xml);
+            return Ok(new { inserted });
+        }
+        catch (InvalidOperationException)
+        {
+            return BadRequest("Invalid XML format.");
+        }
+    }
+
     // GET /api/subscribers/{subscriptionNumber}
     [HttpGet("{subscriptionNumber}")]
     public async Task<IActionResult> GetBySubscriptionNumber(string subscriptionNumber)

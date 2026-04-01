@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using SubscriberSystem.DAL;
 using SubscriberSystem.Models;
 
@@ -41,5 +42,35 @@ public class SubscriberService : ISubscriberService
     public async Task<bool> DeleteAsync(int id)
     {
         return await _repository.DeleteAsync(id);
+    }
+
+    public async Task<string> ExportToXmlAsync()
+    {
+        var subscribers = await _repository.GetAllAsync();
+
+        var serializer = new XmlSerializer(typeof(List<Subscriber>));
+        using var writer = new StringWriter();
+        serializer.Serialize(writer, subscribers.ToList());
+        return writer.ToString();
+    }
+
+    public async Task<int> ImportFromXmlAsync(string xml)
+    {
+        var serializer = new XmlSerializer(typeof(List<Subscriber>));
+        using var reader = new StringReader(xml);
+        var imported = (List<Subscriber>?)serializer.Deserialize(reader) ?? [];
+
+        int inserted = 0;
+        foreach (var subscriber in imported)
+        {
+            var existing = await _repository.GetBySubscriptionNumberAsync(subscriber.SubscriptionNumber);
+            if (existing != null) continue;
+
+            subscriber.Id = 0; // Let the database assign a new ID
+            await _repository.CreateAsync(subscriber);
+            inserted++;
+        }
+
+        return inserted;
     }
 }
