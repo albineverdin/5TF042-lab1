@@ -48,4 +48,22 @@ public class SubscriberApiClient
         var response = await _httpClient.DeleteAsync($"api/subscribers/{id}");
         return response.IsSuccessStatusCode;
     }
+
+    public async Task<string?> ExportXmlAsync()
+    {
+        var response = await _httpClient.GetAsync("api/subscribers/export");
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadAsStringAsync();
+    }
+
+    public async Task<int?> ImportXmlAsync(string xml)
+    {
+        var content = new StringContent(xml, System.Text.Encoding.UTF8, "application/xml");
+        var response = await _httpClient.PostAsync("api/subscribers/import", content);
+        if (!response.IsSuccessStatusCode) return null;
+        var result = await response.Content.ReadFromJsonAsync<ImportResult>();
+        return result?.Inserted;
+    }
+
+    private record ImportResult(int Inserted);
 }

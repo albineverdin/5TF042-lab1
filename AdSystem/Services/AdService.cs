@@ -46,6 +46,16 @@ public class AdService : IAdService
         return await _apiClient.DeleteAsync(id);
     }
 
+    public async Task<string?> ExportSubscribersXmlAsync()
+    {
+        return await _apiClient.ExportXmlAsync();
+    }
+
+    public async Task<int?> ImportSubscribersXmlAsync(string xml)
+    {
+        return await _apiClient.ImportXmlAsync(xml);
+    }
+
     public async Task<Ad> CreateSubscriberAdAsync(string subscriptionNumber, string name, string phone,
         string address, string postalCode, string city,
         string title, string content, decimal itemPrice)
