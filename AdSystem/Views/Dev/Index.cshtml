@@ -8,6 +8,28 @@
 <h2>Dev Tools</h2>
 <p class="text-muted">Development-only page for seeding and inspecting data.</p>
 
+@* ── XML export/import ── *@
+<h4 class="mt-4">XML export / import</h4>
+
+@if (TempData["ImportSuccess"] != null)
+{
+    <div class="alert alert-success">@TempData["ImportSuccess"]</div>
+}
+@if (TempData["ImportError"] != null)
+{
+    <div class="alert alert-danger">@TempData["ImportError"]</div>
+}
+
+<div class="d-flex gap-3 align-items-start mb-4">
+    <a asp-action="DownloadXml" class="btn btn-outline-primary">Download subscribers.xml</a>
+
+    <form asp-action="ImportXml" method="post" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
+        @Html.AntiForgeryToken()
+        <input type="file" name="file" accept=".xml" class="form-control form-control-sm" style="width:auto">
+        <button type="submit" class="btn btn-outline-success btn-sm">Import XML</button>
+    </form>
+</div>
+
 @* ── Subscribers ── *@
 <h4 class="mt-4">Subscribers (via API)</h4>
 @if (!subscribers.Any())
