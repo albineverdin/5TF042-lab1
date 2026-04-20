@@ -57,7 +57,7 @@ namespace AdSystem.Migrations
 
                     b.HasIndex("AdvertiserId");
 
-                    b.ToTable("tbl_ads");
+                    b.ToTable("tbl_ads", (string)null);
                 });
 
             modelBuilder.Entity("AdSystem.Models.Advertiser", b =>
@@ -140,7 +140,7 @@ namespace AdSystem.Migrations
                         .IsUnique()
                         .HasFilter("subscription_number IS NOT NULL");
 
-                    b.ToTable("tbl_advertisers");
+                    b.ToTable("tbl_advertisers", (string)null);
                 });
 
             modelBuilder.Entity("AdSystem.Models.Ad", b =>
